@@ -1,11 +1,21 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 import requests
+import uvicorn
 
-app = FastAPI()
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None
+)
+
+# Serve static frontend
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 def get_stock_price(symbol: str):
-    api_key = "f10a86ac03294d758aa1eb2b027b13f4"  # Replace with your key
+    api_key = "f10a86ac03294d758aa1eb2b027b13f4"  # Your Twelve Data API key
     url = f"https://api.twelvedata.com/price?symbol={symbol}&apikey={api_key}"
     headers = {
         "User-Agent": "Mozilla/5.0"
@@ -21,11 +31,16 @@ def get_stock_price(symbol: str):
         return None
 
 
-@app.get("/stock/{symbol}")
+# API endpoint for frontend
+@app.get("/api/stock-price")
 async def read_stock(symbol: str):
     symbol = symbol.replace('"', '').replace("'", "").upper()
     price = get_stock_price(symbol)
     if price:
         return {"symbol": symbol, "price": price}
     else:
-        return {"error": "Failed to fetch stock price"}
+        return JSONResponse(status_code=404, content={"error": "Failed to fetch stock price"})
+
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
