@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                dir('backend') {    // 👈 Telling Jenkins to move into backend/ folder
+                dir('backend') {
                     script {
                         docker.build("${IMAGE_NAME}")
                     }
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
+                bat '''
                 kubectl apply -f k8s/backend-deployment.yaml
                 kubectl apply -f k8s/backend-service.yaml
                 '''
