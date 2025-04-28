@@ -19,8 +19,8 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 bat '''
-                kubectl apply -f k8s/backend-deployment.yaml
-                kubectl apply -f k8s/backend-service.yaml
+                kubectl apply --validate=false -f k8s/backend-deployment.yaml
+                kubectl apply --validate=false -f k8s/backend-service.yaml
                 '''
             }
         }
