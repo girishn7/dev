@@ -8,8 +8,10 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${IMAGE_NAME}")
+                dir('backend') {    // 👈 Telling Jenkins to move into backend/ folder
+                    script {
+                        docker.build("${IMAGE_NAME}")
+                    }
                 }
             }
         }
