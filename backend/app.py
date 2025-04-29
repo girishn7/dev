@@ -15,7 +15,7 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 def get_stock_price(symbol: str):
-    api_key = "f10a86ac03294d758aa1eb2b027b13f4"  # Your Twelve Data API key
+    api_key = "951deeca533749fab80f572a022b5796"  # Your Twelve Data API key
     url = f"https://api.twelvedata.com/price?symbol={symbol}&apikey={api_key}"
     headers = {
         "User-Agent": "Mozilla/5.0"
