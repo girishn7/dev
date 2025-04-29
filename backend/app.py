@@ -10,18 +10,17 @@ app = FastAPI(
     openapi_url=None
 )
 
-# Serve static frontend (index.html, style.css, script.js)
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# ✅ Serve frontend at /ui instead of /
+app.mount("/ui", StaticFiles(directory="static", html=True), name="static")
 
 
 def get_stock_price(symbol: str):
-    api_key = "951deeca533749fab80f572a022b5796"  # ✅ Replace with your valid API key
+    api_key = "951deeca533749fab80f572a022b5796"  # Your valid API key
     url = f"https://api.twelvedata.com/price?symbol={symbol}&apikey={api_key}"
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
 
-    # 👇 Debug logging to verify the API call
     print(f"[DEBUG] Request URL: {url}")
 
     try:
