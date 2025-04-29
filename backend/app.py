@@ -10,28 +10,35 @@ app = FastAPI(
     openapi_url=None
 )
 
-# Serve static frontend
+# Serve static frontend (index.html, style.css, script.js)
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 def get_stock_price(symbol: str):
-    api_key = "951deeca533749fab80f572a022b5796"  # Your Twelve Data API key
+    api_key = "951deeca533749fab80f572a022b5796"  # ✅ Replace with your valid API key
     url = f"https://api.twelvedata.com/price?symbol={symbol}&apikey={api_key}"
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        data = response.json()
-        if "price" in data:
-            return float(data["price"])
-        else:
-            return None
-    else:
+
+    # 👇 Debug logging to verify the API call
+    print(f"[DEBUG] Request URL: {url}")
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        print(f"[DEBUG] Response Code: {response.status_code}")
+        print(f"[DEBUG] Response Body: {response.text}")
+
+        if response.status_code == 200:
+            data = response.json()
+            if "price" in data:
+                return float(data["price"])
+        return None
+    except Exception as e:
+        print(f"[ERROR] Exception occurred: {e}")
         return None
 
 
-# API endpoint for frontend
 @app.get("/api/stock-price")
 async def read_stock(symbol: str):
     symbol = symbol.replace('"', '').replace("'", "").upper()
