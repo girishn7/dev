@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: stock-backend
-          image: stock-backend:latest
+          image: stock-backend:v8
           imagePullPolicy: Never
           ports:
             - containerPort: 8000
